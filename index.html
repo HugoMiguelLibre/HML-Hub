@@ -88,25 +88,25 @@
             100% { stroke-dashoffset: 0; }
         }
 
-        .brand-center {
+                .brand-center {
             position: absolute;
-            z-index: 10;
-            color: #B026FF;
-            font-weight: 700;
-            font-size: 0.95rem;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            background-color: transparent;
-            text-shadow: 0 0 10px rgba(176, 38, 255, 0.8);
+            z-index: 20;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             width: 95px;
             height: 95px;
-            line-height: 1.3;
+            background-color: #0b0c0c;
+            border-radius: 50%;
             pointer-events: none;
+            overflow: hidden;
+        }
+
+        .brand-center img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
         }
 
         .portal-corner {
@@ -281,11 +281,8 @@
         </svg>
 
         <div id="center-brand" class="brand-center">
-            <span>Hugo</span>
-            <span>Miguel</span>
-            <span>libre</span>
-        </div>
-
+    <img src="logo.png" alt="Hugo Miguel libre">
+</div>
         <div class="portal-corner p1" onclick="showPortal(1)"><i class="fab fa-instagram"></i></div>
         <div class="portal-corner p2" onclick="showPortal(2)"><i class="fab fa-wordpress"></i></div>
         <div class="portal-corner p3" onclick="showPortal(3)"><i class="fab fa-blogger"></i></div>
