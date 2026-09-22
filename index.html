@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hugo Miguel libre | Portal</title>
+    <!-- Biblioteca atualizada para garantir o suporte nativo ao Threads e todos os outros ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b0c0c;
+            color: #CAC9CF;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #digital-rain-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            z-index: -1;
+            background: linear-gradient(to bottom, transparent, #84FF90, transparent);
+            box-shadow: 0 0 15px #84FF90;
+            opacity: 0.15;
+            animation: vrScanLine 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            pointer-events: none;
+        }
+
+        @keyframes vrScanLine {
+            0% { top: -2%; }
+            50% { top: 102%; }
+            100% { top: -2%; }
+        }
+
+        .star-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .star-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .star-base {
+            stroke: rgba(229, 169, 60, 0.05);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .line-grad-1 { stroke: url(#g1); stroke-width: 3; fill: none; stroke-dasharray: 20 20; stroke-dashoffset: 40; animation: snakeFragments 1.5s linear infinite; stroke-linecap: round; }
+        .line-grad-2 { stroke: url(#g2); stroke-width: 3; fill: none; stroke-dasharray: 20 20; stroke-dashoffset: 40; animation: snakeFragments 1.5s linear infinite; stroke-linecap: round; }
+        .line-grad-3 { stroke: url(#g3); stroke-width: 3; fill: none; stroke-dasharray: 20 20; stroke-dashoffset: 40; animation: snakeFragments 1.5s linear infinite; stroke-linecap: round; }
+        .line-grad-4 { stroke: url(#g4); stroke-width: 3; fill: none; stroke-dasharray: 20 20; stroke-dashoffset: 40; animation: snakeFragments 1.5s linear infinite; stroke-linecap: round; }
+        .line-grad-5 { stroke: url(#g5); stroke-width: 3; fill: none; stroke-dasharray: 20 20; stroke-dashoffset: 40; animation: snakeFragments 1.5s linear infinite; stroke-linecap: round; }
+
+        @keyframes snakeFragments {
+            0% { stroke-dashoffset: 40; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        .brand-center {
+            position: absolute;
+            z-index: 10;
+            color: #B026FF;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background-color: transparent;
+            text-shadow: 0 0 10px rgba(176, 38, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 95px;
+            height: 95px;
+            line-height: 1.3;
+            pointer-events: none;
+        }
+
+        .portal-corner {
+            position: absolute;
+            width: 38px;
+            height: 38px;
+            background-color: transparent;
+            border: 2px solid #E5A93C;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 5;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #E5A93C;
+            font-size: 0.95rem;
+        }
+
+        .portal-corner:hover, .portal-corner.active {
+            background-color: transparent;
+            border-color: #5CE0E9;
+            color: #5CE0E9;
+            transform: scale(1.15);
+            box-shadow: 0 0 12px rgba(92, 224, 233, 0.7);
+        }
+
+        .p1 { top: 1px;    left: 141px; } 
+        .p2 { top: 97px;   right: -11px; } 
+        .p3 { bottom: 6px;  right: 49px; }  
+        .p4 { bottom: 6px;  left: 49px; }   
+        .p5 { top: 97px;   left: -11px; }  
+
+        .description-panel {
+            width: 90%;
+            max-width: 420px;
+            margin-top: 40px;
+            min-height: 180px;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .desc-title {
+            color: #CAC9CF; 
+            font-size: 1.25rem;
+            font-weight: 700; 
+            margin-bottom: 12px;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        
+        .desc-title.active-neon {
+            color: #84FF90 !important; 
+            text-shadow: 0 0 10px rgba(132, 255, 144, 0.5);
+        }
+
+        .desc-text {
+            color: #5CE0E9; 
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 22px;
+            text-shadow: 0 0 8px rgba(92, 224, 233, 0.3);
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            font-weight: bold;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (min-width: 360px) {
+            .buttons-container.row-layout {
+                flex-direction: row;
+                gap: 15px;
+            }
+        }
+
+        .action-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #B026FF; 
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: none;
+            box-shadow: 0 4px 10px rgba(176, 38, 255, 0.3);
+        }
+
+        .action-button:active {
+            transform: scale(0.96);
+        }
+
+        .action-button.secondary-btn {
+            background-color: #E5A93C;
+            box-shadow: 0 4px 10px rgba(229, 169, 60, 0.3);
+        }
+
+        .support-btn {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: rgba(202, 201, 207, 0.6);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .support-btn:hover {
+            color: #E5A93C;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="digital-rain-canvas"></canvas>
+
+    <div class="star-container">
+        <svg class="star-svg" viewBox="0 0 320 320">
+            <defs>
+                <linearGradient id="g1" x1="160" y1="20" x2="242.3" y2="273.3" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#E5A93C"/>
+                    <stop offset="30%" stop-color="#E5A93C"/>
+                    <stop offset="45%" stop-color="#84FF90"/>
+                    <stop offset="75%" stop-color="#84FF90"/>
+                    <stop offset="85%" stop-color="#E5A93C"/>
+                    <stop offset="100%" stop-color="#E5A93C"/>
+                </linearGradient>
+                <linearGradient id="g2" x1="242.3" y1="273.3" x2="26.9" y2="116.7" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#E5A93C"/>
+                    <stop offset="25%" stop-color="#E5A93C"/>
+                    <stop offset="40%" stop-color="#84FF90"/>
+                    <stop offset="70%" stop-color="#84FF90"/>
+                    <stop offset="80%" stop-color="#E5A93C"/>
+                    <stop offset="100%" stop-color="#E5A93C"/>
+                </linearGradient>
+                <linearGradient id="g3" x1="26.9" y1="116.7" x2="293.1" y2="116.7" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#E5A93C"/>
+                    <stop offset="35%" stop-color="#E5A93C"/>
+                    <stop offset="45%" stop-color="#84FF90"/>
+                    <stop offset="55%" stop-color="#84FF90"/>
+                    <stop offset="65%" stop-color="#E5A93C"/>
+                    <stop offset="100%" stop-color="#E5A93C"/>
+                </linearGradient>
+                <linearGradient id="g4" x1="293.1" y1="116.7" x2="77.7" y2="273.3" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#E5A93C"/>
+                    <stop offset="25%" stop-color="#E5A93C"/>
+                    <stop offset="40%" stop-color="#84FF90"/>
+                    <stop offset="70%" stop-color="#84FF90"/>
+                    <stop offset="80%" stop-color="#E5A93C"/>
+                    <stop offset="100%" stop-color="#E5A93C"/>
+                </linearGradient>
+                <linearGradient id="g5" x1="77.7" y1="273.3" x2="160" y2="20" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#E5A93C"/>
+                    <stop offset="30%" stop-color="#E5A93C"/>
+                    <stop offset="45%" stop-color="#84FF90"/>
+                    <stop offset="75%" stop-color="#84FF90"/>
+                    <stop offset="85%" stop-color="#E5A93C"/>
+                    <stop offset="100%" stop-color="#E5A93C"/>
+                </linearGradient>
+            </defs>
+            
+            <polygon class="star-base" points="160,20 242.3,273.3 26.9,116.7 293.1,116.7 77.7,273.3" />
+            <line x1="160" y1="20" x2="242.3" y2="273.3" class="line-grad-1" />
+            <line x1="242.3" y1="273.3" x2="26.9" y2="116.7" class="line-grad-2" />
+            <line x1="26.9" y1="116.7" x2="293.1" y2="116.7" class="line-grad-3" />
+            <line x1="293.1" y1="116.7" x2="77.7" y2="273.3" class="line-grad-4" />
+            <line x1="77.7" y1="273.3" x2="160" y2="20" class="line-grad-5" />
+        </svg>
+
+        <div id="center-brand" class="brand-center">
+            <span>Hugo</span>
+            <span>Miguel</span>
+            <span>libre</span>
+        </div>
+
+        <div class="portal-corner p1" onclick="showPortal(1)"><i class="fab fa-instagram"></i></div>
+        <div class="portal-corner p2" onclick="showPortal(2)"><i class="fab fa-wordpress"></i></div>
+        <div class="portal-corner p3" onclick="showPortal(3)"><i class="fab fa-blogger"></i></div>
+        <div class="portal-corner p4" onclick="showPortal(4)"><i class="fab fa-threads"></i></div>
+        <div class="portal-corner p5" onclick="showPortal(5)"><i class="fab fa-youtube"></i></div>
+    </div>
+
+    <div class="description-panel">
+        <div id="portal-title" class="desc-title"></div>
+        <p id="portal-text" class="desc-text">Each platform reflects a different facet of me via my way of writing</p>
+        <div id="buttons-area" class="buttons-container">
+            <a id="portal-link" href="#" class="action-button" target="_blank">Step through the portal ➔</a>
+            <a id="portal-link-secondary" href="#" class="action-button secondary-btn" target="_blank">Under Current 🎧</a>
+        </div>
+    </div>
+
+    <a href="https://bmc.xyz/l/Hugomiguellibre" class="support-btn" target="_blank"><i class="fas fa-coffee"></i> Support my writing</a>
+
+    <script>
+        const canvas = document.getElementById('digital-rain-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const lineWidth = 2; 
+        const spacing = 24; 
+        const columns = Math.floor(canvas.width / spacing);
+        const rainDrops = [];
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = Math.random() * -canvas.height;
+        }
+
+        const speed = 4;
+        const dropLength = 60; 
+
+        function drawDigitalLines() {
+            ctx.fillStyle = 'rgba(11, 12, 12, 0.12)'; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.lineWidth = lineWidth;
+            
+            for (let i = 0; i < rainDrops.length; i++) {
+                const xPosition = i * spacing;
+                const yPosition = rainDrops[i];
+
+                ctx.beginPath();
+                ctx.moveTo(xPosition, yPosition - dropLength);
+                ctx.lineTo(xPosition, yPosition);
+                
+                ctx.strokeStyle = 'rgba(132, 255, 144, 0.45)'; 
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = '#84FF90';
+                ctx.stroke();
+
+                rainDrops[i] += speed;
+
+                if (rainDrops[i] > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+            }
+            ctx.shadowBlur = 0;
+            requestAnimationFrame(drawDigitalLines);
+        }
+        requestAnimationFrame(drawDigitalLines);
+
+        const portalData = {
+            1: {
+                title: "Salty with a dash of irony series",
+                text: "A rebel with a cause.",
+                url: "https://www.instagram.com/hugo_miguel_libre"
+            },
+            2: {
+                title: "WordPress Hub",
+                text: "Explore my concepts across two distinct formats: the raw essays or the deep audio archive.",
+                url: "https://hugomiguellibre.wordpress.com",
+                isWordPressHub: true,
+                secondaryUrl: "https://hugomiguellibre.wordpress.com/underline/"
+            },
+            3: {
+                title: "My paradox series",
+                text: "A good conundrum is a good WTF moment.",
+                url: "https://messagesunderreflections.blogspot.com/"
+            },
+            4: {
+                title: "Primal root series",
+                text: "The Celtic root and the Portuguese spirit expose.",
+                url: "https://www.threads.net/@hugo_miguel_libre"
+            },
+            5: {
+                title: "Get to know me series",
+                text: "I share my knowledge, my history and guidance.",
+                url: "https://www.youtube.com/@Hugo_Miguel_libre"
+            }
+        };
+
+        function showPortal(id) {
+            document.querySelectorAll('.portal-corner').forEach(el => el.classList.remove('active'));
+            
+            const activeCorner = document.querySelector(`.p${id}`);
+            if (activeCorner) activeCorner.classList.add('active');
+
+            const data = portalData[id];
+
+            if (data) {
+                const titleEl = document.getElementById('portal-title');
+                const textEl = document.getElementById('portal-text');
+                const linkEl = document.getElementById('portal-link');
+                const linkSecEl = document.getElementById('portal-link-secondary');
+                const containerEl = document.getElementById('buttons-area');
+
+                titleEl.textContent = data.title;
+                titleEl.classList.add('active-neon');
+                textEl.textContent = data.text;
+                
+                if (data.isWordPressHub) {
+                    containerEl.classList.add('row-layout');
+                    
+                    linkEl.href = data.url;
+                    linkEl.textContent = "Voiceless Sound ➔";
+                    linkEl.style.display = 'inline-block';
+                    
+                    linkSecEl.href = data.secondaryUrl;
+                    linkSecEl.style.display = 'inline-block';
+                } else {
+                    containerEl.classList.remove('row-layout');
+                    
+                    linkEl.href = data.url;
+                    linkEl.textContent = "step through the portal➔";
+                    linkEl.style.display = 'inline-block';
+                    
+                    linkSecEl.style.display = 'none';
+                }
+            }
+        }
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+  <div style="display:none">
+  <a href="https://linkedin.com" rel="me" class="professional-validation">LinkedIn</a>
+  <a href="https://threads.net" rel="me">Threads</a>
+</div>
+</body>
+</html>
