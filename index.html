@@ -234,7 +234,15 @@ svg, .star-svg {
     color: #84FF90 !important; 
     text-shadow: 0 0 10px rgba(132, 255, 144, 0.5);
 }
-
+.desc-style {
+    color: #FFBF00; 
+    font-size: 1.25rem;
+    font-weight: 700; 
+    margin-bottom: 12px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+      
+}
+   
 .desc-text {
     color: #5CE0E9; 
     font-size: 0.95rem;
@@ -428,8 +436,9 @@ svg, .star-svg {
    </div>
 
     <div class="description-panel">
-        <div id="portal-title" class="desc-title"></div>
-        <p id="portal-text" class="desc-text">Each platform reflects a different facet of me via my way of writing</p>
+        <div id="portal-title" class="desc-title">Serie Name</div>
+      <b id="portal-style" class="desc-style"> Writing Format </b>
+        <p id="portal-text" class="desc-text">the vibe I am going for in that serie</p>
         <div id="buttons-area" class="buttons-container">
             <a id="portal-link" href="#" class="action-button" target="_blank">Step through the portal ➔</a>
             <a id="portal-link-secondary" href="#" class="action-button secondary-btn" target="_blank">Under Current 🎧</a>
@@ -492,51 +501,61 @@ svg, .star-svg {
                         const portalData = {
             1: {
                 title: "My Paradox Series",
+              style:"Conundrum",
                 text: "A good conundrum is a good WTF moment. Exploring the logical riddles of the mind.",
                 url: "https://messagesunderreflections.blogspot.com/"
             },
             2: {
                 title: "outburst of lunacy series",
+              style:"Shower thought",
                 text: "An howl at the moon from seeinhg the macro scale nealty",
                 url: "https://t.me/outburstsoflunacy"
             },
             3: {
                 title: "Salty with a dash of irony series",
+              style:"Food for thought ",
                 text: "A rebel with a cause and a lot of irony",
                 url: "https://www.instagram.com/hugo_miguel_libre?stkn=MWZub3dqczJ5azZuaw%3D%3D&utm_source=qr"
             },
             4: {
                 title: "Underline Current series",
+              style:"Thought Provocative",
                 text: "we are one and the same even while talking a different language",
                 url: "https://open.substack.com/pub/hugomiguellibre"
             },
             5: {
                 title: "Voiceless Sound series",
+              style:"Journaling",
                 text: "harsh reality of the majority, those that show up but see beyond the mask",
                 url: "http://hugomiguellibre.wordpress.com"
             },
             6: {
                 title: "what is up with that series",
+              style:"Retoric question",
                 text: "short burst of reality checks and raising the right questions.",
                 url: "https://www.tiktok.com/@hugo.miguel.libre"
             },
             7: {
                 title: "Get to know me Series",
+              style:"Vlog",
                 text: " I talk a about my life, my struggles and my insights that I have gotten through life experience",
                 url: "https://youtube.com/@hugo_miguel_libre?si=IQTb61KJpLei-5Tw" // Podes colar o teu link do SoundCloud aqui
             },
             8: {
                 title: "Portuguese Mythos Series",
-                text: " energeric entities forgotten through time",
-                url: "https://hml_folio.artstation.com" // Podes colar o teu link do Substack aqui
+              style:"Compedium",
+              text :" Portuguese energeric entities forgotten through time",
+            url: "https://hml_folio.artstation.com" // Podes colar o teu link do Substack aqui
             },
             9: {
                 title: "Primal Root Series",
+              style:"Fun facts",
                 text: "I explore the esoteric history of Portugal and the roots of events on this land",
                 url: "https://www.threads.com/@hugo_miguel_libre?igshid=NTc4MTIwNjQ2YQ==" // Podes colar o teu link do ArtStation aqui
             },
             10: {
                 title: "Meditate on that Series",
+              style:"Podcast",
                 text: "its a short podcast about a certain topic + audiobook version of what you find on substrack",
                 url: "https://on.soundcloud.com/6i5cI0XDe9fZ4Vcl31" // Podes colar o teu link do TikTok aqui
             }
@@ -601,13 +620,16 @@ svg, .star-svg {
     // ... restando código do teu painel de texto ...
             if (data) {
                 const titleEl = document.getElementById('portal-title');
-                const textEl = document.getElementById('portal-text');
+             const styleEl = document.getElementById('portal-style');
+              const textEl = document.getElementById('portal-text');
                 const linkEl = document.getElementById('portal-link');
                 const linkSecEl = document.getElementById('portal-link-secondary');
                 const containerEl = document.getElementById('buttons-area');
 
                 titleEl.textContent = data.title;
                 titleEl.classList.add('active-neon');
+
+styleEl.textContent = data.style;
                 textEl.textContent = data.text;
                 
                 // Tranca o URL real do teu canal (como o teu TikTok com pontos) no botão de ação
