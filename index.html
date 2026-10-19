@@ -194,10 +194,21 @@ svg, .star-svg {
     height: 95px !important;
     background-color: #0b0c0c !important;
     border-radius: 50% !important;
-    pointer-events: none !important;
+    pointer-events: auto !important;
     overflow: hidden !important;
     margin: 0 !important;
-}
+   cursor: pointer;
+            user-select: none;
+            transition: transform 0.2s ease;
+        }
+        brand-center:hover {
+            transform: translate(-50%, -50%) scale(1.05) !important;
+        }
+
+        .brand-center:active {
+            transform: translate(-50%, -50%) scale(0.95) !
+        }
+
 
 .brand-center img {
     width: 100% !important;
@@ -223,7 +234,7 @@ svg, .star-svg {
 }
 
 .desc-title {
-    color: #CAC9CF; 
+    color: #84FF90; 
     font-size: 1.25rem;
     font-weight: 700; 
     margin-bottom: 12px;
@@ -261,13 +272,6 @@ svg, .star-svg {
     justify-content: center;
 }
 
-@media (min-width: 360px) {
-    .buttons-container.row-layout {
-        flex-direction: row;
-        gap: 15px;
-    }
-}
-
 .action-button {
     display: inline-block;
     padding: 12px 24px;
@@ -284,11 +288,6 @@ svg, .star-svg {
 
 .action-button:active {
     transform: scale(0.96);
-}
-
-.action-button.secondary-btn {
-    background-color: #E5A93C;
-    box-shadow: 0 4px 10px rgba(229, 169, 60, 0.3);
 }
 
 .support-btn {
@@ -429,7 +428,7 @@ svg, .star-svg {
             <i class="fab fa-soundcloud" style="transform: rotate(-36deg); font-size: 20px;"></i>
         </div>
     </div>
-    <div class="brand-center">
+    <div id="logo-reset" class="brand-center">
        
         <img id="center-logo" src="logo.png" alt="Logo Central Portal">
     </div>
@@ -441,7 +440,7 @@ svg, .star-svg {
         <p id="portal-text" class="desc-text">the vibe I am going for in that serie</p>
         <div id="buttons-area" class="buttons-container">
             <a id="portal-link" href="#" class="action-button" target="_blank">Step through the portal ➔</a>
-            <a id="portal-link-secondary" href="#" class="action-button secondary-btn" target="_blank">Under Current 🎧</a>
+            
         </div>
     </div>
 
@@ -572,8 +571,7 @@ svg, .star-svg {
         el.style.boxShadow = '';
     });
     
-    // 2. CORREÇÃO DE SELEÇÃO: Encontra o botão físico (p1 a p5) dentro da estrela correta
-       // 2. CORREÇÃO MATEMÁTICA: Converte o ID do relógio para as classes físicas reais p1-p5
+    // 2. CORREÇÃO MATEMÁTICA: Converte o ID do relógio para as classes físicas reais p1-p5
     let activeCorner;
     if (id === 1 || id === 3 || id === 5 || id === 7 || id === 9) {
         // ESTRELA 1 (Ímpares): Mapeia ID 1->p1, ID 3->p2, ID 5->p3, ID 7->p4, ID 9->p5
@@ -585,7 +583,6 @@ svg, .star-svg {
         activeCorner = document.querySelector(`div[style*="rotate"] .p${index}`);
     }
 
-    
     // 3. INJEÇÃO DA RETROILUMINAÇÃO SEGURO (A luz acende estritamente no ponto clicado)
     if (activeCorner) {
         activeCorner.classList.add('active');
@@ -593,7 +590,7 @@ svg, .star-svg {
         let neonColor;
         switch(Number(id)) {
             case 1:  neonColor = '#e87a24'; break; // Blogger (Laranja)
-            case 2:  neonColor = '#4078c0'; break; // GitHub (Azul)
+            case 2:  neonColor = '#4078c0'; break; // GitHub/Telegram (Azul)
             case 3:  neonColor = '#b83074'; break; // Instagram (Magenta)
             case 4:  neonColor = '#ff6719'; break; // Substack (Cobre)
             case 5:  neonColor = '#0073aa'; break; // WordPress (Azul)
@@ -604,52 +601,72 @@ svg, .star-svg {
             case 10: neonColor = '#ff5500'; break; // SoundCloud (Laranja Vivo)
         }
         
-        // Aplica a cor de fundo e a tripla sombra néon de retroiluminação
         activeCorner.style.setProperty('background-color', neonColor, 'important');
         activeCorner.style.setProperty('border-color', 'rgba(255, 255, 255, 0.6)', 'important');
-        
-        // Brilho exterior néon + Iluminação interior suave + Iluminação interior forte da marca
         activeCorner.style.setProperty('box-shadow', 
             `0 0 25px ${neonColor}, inset 0 0 14px rgba(255, 255, 255, 0.5), inset 0 0 20px ${neonColor}`, 
             'important'
         );
     }
 
-    // 4. ATUALIZAÇÃO DO PAINEL DE TEXTO (O teu código original daqui para a frente continua igual...)
+    // 4. ATUALIZAÇÃO DO PAINEL DE TEXTO
     const data = portalData[id];
-    // ... restando código do teu painel de texto ...
-            if (data) {
-                const titleEl = document.getElementById('portal-title');
-             const styleEl = document.getElementById('portal-style');
-              const textEl = document.getElementById('portal-text');
-                const linkEl = document.getElementById('portal-link');
-                const linkSecEl = document.getElementById('portal-link-secondary');
-                const containerEl = document.getElementById('buttons-area');
+    if (data) {
+        const titleEl = document.getElementById('portal-title');
+        const styleEl = document.getElementById('portal-style');
+        const textEl = document.getElementById('portal-text');
+        const linkEl = document.getElementById('portal-link');
+        const linkSecEl = document.getElementById('portal-link-secondary');
+        const containerEl = document.getElementById('buttons-area');
 
-                titleEl.textContent = data.title;
-                titleEl.classList.add('active-neon');
-
-styleEl.textContent = data.style;
-                textEl.textContent = data.text;
-                
-                // Tranca o URL real do teu canal (como o teu TikTok com pontos) no botão de ação
-                linkEl.href = data.url;
-                linkEl.style.display = 'inline-block';
-                
-                // Lógica especial exclusiva para o teu WordPress Hub
-                if (data.isWordPressHub) {
-                    containerEl.classList.add('row-layout');
-                    linkEl.textContent = "Voiceless Sound ➔";
-                    linkSecEl.href = data.secondaryUrl;
-                    linkSecEl.style.display = 'inline-block';
-                } else {
-                    containerEl.classList.remove('row-layout');
-                    linkEl.textContent = "step through the portal ➔";
-                    linkSecEl.style.display = 'none';
-                }
-            }
-        }
+        titleEl.textContent = data.title;
+        titleEl.classList.add('active-neon');
+        styleEl.textContent = data.style;
+        textEl.textContent = data.text;
         
+        linkEl.href = data.url;
+        linkEl.style.display = 'inline-block';
+        
+        
+        linkEl.href = data.url;
+        linkEl.style.display = 'inline-block';
+        
+        // CORREÇÃO: Altera o texto do botão de forma simples para a série 5, sem o segundo botão
+        
+    }
+}
+ // <--- AQUI FECHA A FUNÇÃO SHOWPORTAL CORRETAMENTE E ISOLA-A
+
+// 5. FUNÇÃO RESET TOTALMENTE INDEPENDENTE E CORRIGIDA
+function resetPortal() {
+    document.querySelectorAll('.portal-corner').forEach(el => {
+        el.classList.remove('active');
+        el.style.backgroundColor = '';
+        el.style.borderColor = '';
+        el.style.boxShadow = '';
+    });
+    
+    const titleEl = document.getElementById('portal-title');
+    const styleEl = document.getElementById('portal-style');
+    const textEl = document.getElementById('portal-text');
+    const linkEl = document.getElementById('portal-link');
+
+    titleEl.textContent = "Serie Name";
+    titleEl.classList.remove('active-neon');
+    styleEl.textContent = " Writing Format ";
+    textEl.textContent = "the vibe I am going for in that serie";
+    
+    // Esconde apenas o único botão existente
+    linkEl.href = "#";
+    linkEl.style.display = 'none';
+    linkEl.textContent = "Step through the portal ➔";
+}
+
+
+// 6. LIGAÇÃO DO EVENTO DE RESET SEGURO VIA ID
+document.getElementById('logo-reset').addEventListener('click', resetPortal);
+
+      
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
   <div style="display:none">
