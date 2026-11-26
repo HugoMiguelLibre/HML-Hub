@@ -83,6 +83,7 @@
 }
 
 /* Transparência total forçada em todos os blocos SVG */
+/* Transparência total forçada em todos os blocos SVG */
 svg, .star-svg {
     position: absolute !important;
     width: 320px !important;
@@ -93,6 +94,7 @@ svg, .star-svg {
     background-color: transparent !important;
     overflow: visible !important; 
 }
+
 
 .portal-corner {
     position: absolute;
@@ -183,13 +185,38 @@ svg, .star-svg {
     margin: 0 auto !important;
     flex-shrink: 0 !important;
 }
+.center-assembly {
+    position: absolute;
+    z-index: 20;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 132px;
+    height: 132px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hub-dial {
+    position: absolute;
+    inset: 0;
+    z-index: 18;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+}
 
 .brand-center {
-    position: absolute !important;
+    position: relative !important;
     z-index: 30 !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
     width: 95px !important;
     height: 95px !important;
     background-color: #0b0c0c !important;
@@ -197,18 +224,14 @@ svg, .star-svg {
     pointer-events: auto !important;
     overflow: hidden !important;
     margin: 0 !important;
-   cursor: pointer;
-            user-select: none;
-            transition: transform 0.2s ease;
-        }
-        brand-center:hover {
-            transform: translate(-50%, -50%) scale(1.05) !important;
-        }
-
-        .brand-center:active {
-            transform: translate(-50%, -50%) scale(0.95) !
-        }
-
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease;
+}
 
 .brand-center img {
     width: 100% !important;
@@ -217,7 +240,88 @@ svg, .star-svg {
     border-radius: 50% !important;
     mix-blend-mode: screen !important;
     display: block !important;
+    margin: 0 !important;
 }
+
+
+.brand-center:active {
+    transform: scale(0.95) !important;
+}
+
+
+.hub-dial:active { cursor: grabbing; }
+
+#dial-wheel {
+    position: relative !important;
+    width: 132px !important;
+    height: 132px !important;
+    top: auto !important;
+    left: auto !important;
+    overflow: visible !important;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), filter 0.3s ease;
+}
+
+
+.hub-dial.dragging #dial-wheel { transition: none; }
+
+.hub-dial .dial-outer {
+    fill: none;
+    stroke: #E5A93C;
+    stroke-width: 1.5;
+    stroke-dasharray: 6 4;
+    opacity: 0.8;
+    transition: stroke 0.25s ease;
+}
+
+.hub-dial .dial-inner {
+    fill: none;
+    stroke: #84FF90;
+    stroke-width: 1;
+    opacity: 0.35;
+    transition: opacity 0.25s ease;
+}
+
+.hub-dial .dial-ticks line {
+    stroke: #E5A93C;
+    stroke-width: 2.2;
+    opacity: 0.9;
+    transition: stroke 0.25s ease;
+}
+
+.hub-dial.dragging .dial-outer,
+.hub-dial.dragging .dial-ticks line,
+.hub-dial.unlocked .dial-outer,
+.hub-dial.unlocked .dial-ticks line {
+    stroke: #84FF90;
+}
+
+.hub-dial.unlocked #dial-wheel {
+    filter: drop-shadow(0 0 16px rgba(132, 255, 144, 0.9));
+}
+
+.hub-dial-label {
+    position: absolute;
+    bottom: -16px;
+    background-color: #0b0c0c;
+    padding: 2px 8px;
+    border: 1px solid #E5A93C;
+    border-radius: 4px;
+    color: #E5A93C;
+    text-decoration: none;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-indent: 0.22em;
+    transition: all 0.25s ease;
+}
+
+.hub-dial:hover .hub-dial-label,
+.hub-dial.unlocked .hub-dial-label {
+    color: #84FF90;
+    border-color: #84FF90;
+    box-shadow: 0 0 10px rgba(132, 255, 144, 0.45);
+}
+
 
 .description-panel {
     width: 90%;
@@ -428,10 +532,32 @@ svg, .star-svg {
             <i class="fab fa-soundcloud" style="transform: rotate(-36deg); font-size: 20px;"></i>
         </div>
     </div>
+  <!-- LOCKED CENTER ASSEMBLY -->
+<div class="center-assembly">
+    <!-- INTERACTIVE DRAG-TO-ROTATE STAR-KEY DIAL -->
+    <div id="hub-dial" class="hub-dial" title="Drag & rotate the dial to unlock the HUB">
+        <svg id="dial-wheel" viewBox="0 0 132 132">
+            <circle cx="66" cy="66" r="60" class="dial-outer" />
+            <circle cx="66" cy="66" r="53" class="dial-inner" />
+            <g class="dial-ticks">
+                <line x1="66" y1="1" x2="66" y2="9" />
+                <line x1="66" y1="123" x2="66" y2="131" />
+                <line x1="1" y1="66" x2="9" y2="66" />
+                <line x1="123" y1="66" x2="131" y2="66" />
+                <line x1="24" y1="24" x2="30" y2="30" />
+                <line x1="102" y1="102" x2="108" y2="108" />
+                <line x1="108" y1="24" x2="102" y2="30" />
+                <line x1="30" y1="102" x2="24" y2="108" />
+            </g>
+        </svg>
+        <a href="hub/" class="hub-dial-label" id="hub-label">HUB</a>
+    </div>
+
+    <!-- YOUR ORIGINAL LOGO RESET ELEMENT -->
     <div id="logo-reset" class="brand-center">
-       
         <img id="center-logo" src="logo.png" alt="Logo Central Portal">
     </div>
+</div>
    </div>
 
     <div class="description-panel">
@@ -444,7 +570,8 @@ svg, .star-svg {
         </div>
     </div>
 
-    <a href="https://bmc.xyz/l/Hugomiguellibre" class="support-btn" target="_blank"><i class="fas fa-coffee"></i> Support my writing</a>
+    <a href=" https: www.buymeacoffee.com/hugomiguellibre                " class="support-btn" target="_blank" rel="noopener noreferrer"><i class="fas fa-coffee"></i> Support my writing</a>
+
 
     <script>
         const canvas = document.getElementById('digital-rain-canvas');
@@ -666,7 +793,89 @@ function resetPortal() {
 // 6. LIGAÇÃO DO EVENTO DE RESET SEGURO VIA ID
 document.getElementById('logo-reset').addEventListener('click', resetPortal);
 
-      
+         // NEFERTIRI DIAL DRAG-TO-ROTATE (Mouse + Touch)
+  (function() {
+    const dial = document.getElementById('hub-dial');
+    const wheel = document.getElementById('dial-wheel');
+    const label = document.getElementById('hub-label');
+    if (!dial || !wheel) return;
+
+    let isDragging = false;
+    let wasDragged = false;
+    let startAngle = 0;
+    let currentRotation = 0;
+    let isUnlocked = false;
+
+    function getAngle(clientX, clientY) {
+        const rect = dial.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        return Math.atan2(clientY - centerY, clientX - centerX) * (180 / Math.PI);
+    }
+
+    dial.addEventListener('pointerdown', (e) => {
+        if (isUnlocked) return;
+        e.preventDefault();
+        isDragging = true;
+        wasDragged = false;
+        dial.classList.add('dragging');
+        try { dial.setPointerCapture(e.pointerId); } catch (err) {}
+        startAngle = getAngle(e.clientX, e.clientY) - currentRotation;
+    });
+
+    dial.addEventListener('pointermove', (e) => {
+        if (!isDragging || isUnlocked) return;
+        const newAngle = getAngle(e.clientX, e.clientY) - startAngle;
+        if (Math.abs(newAngle - currentRotation) > 3) {
+            wasDragged = true;
+        }
+        currentRotation = newAngle;
+        wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+        let normalized = ((currentRotation + 180) % 360) - 180;
+        if (Math.abs(normalized) >= 36) {
+            isUnlocked = true;
+            isDragging = false;
+            dial.classList.remove('dragging');
+            dial.classList.add('unlocked');
+            wheel.style.transform = `rotate(${normalized > 0 ? 36 : -36}deg)`;
+            if (label) label.textContent = "UNLOCKED";
+            setTimeout(() => {
+                window.location.href = "hub/";
+            }, 450);
+        }
+    });
+
+    function stopDrag(e) {
+        if (!isDragging || isUnlocked) return;
+        isDragging = false;
+        dial.classList.remove('dragging');
+        try { dial.releasePointerCapture(e.pointerId); } catch (err) {}
+        currentRotation = 0;
+        wheel.style.transform = `rotate(0deg)`;
+    }
+
+    dial.addEventListener('pointerup', stopDrag);
+    dial.addEventListener('pointercancel', stopDrag);
+
+    if (label) {
+        label.addEventListener('click', (e) => {
+            if (wasDragged) e.preventDefault();
+        });
+    }
+
+    window.addEventListener('pageshow', () => {
+        isUnlocked = false;
+        isDragging = false;
+        wasDragged = false;
+        currentRotation = 0;
+        dial.classList.remove('dragging', 'unlocked');
+        wheel.style.transform = 'rotate(0deg)';
+        if (label) label.textContent = 'HUB';
+    });
+})();
+
+
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
   <div style="display:none">
